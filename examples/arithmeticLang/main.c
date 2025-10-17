@@ -3,8 +3,9 @@
 #include <string.h>
 
 
-void main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
+	int __EXIT_CODE__ = 0;
 	printf("HELLO MOTO!!!\n");
 	fflush(stdout);
-	return;
+	return __EXIT_CODE__;
 }
