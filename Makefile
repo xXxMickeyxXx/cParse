@@ -1,13 +1,10 @@
-# @NOTE: Compiler flags:
-# @NOTE: -Wall: all warnings
-# @NOTE: -Wextra: more warnings
-# @NOTE: -std=c11: use C11 standard
-# @NOTE: -march=native: select target architecture for code generation; 'native' automatically detects architecture of the CPU with which the system is being built on
-# @NOTE: -Wno-unused-variable -Wno-unused-function: supress errors that are generated from variables/functions (respectively) that aren't used
+########################################################
+# • ---------- 'cParse' PACKAGE STRUCTURE ---------- • #
+########################################################
 
-
-LIB_NAME ?= cParse
-CCOMPILER = clang
+CCOMPILER ?= clang
+LIB_NAME = cParse
+SEMVAR ?= 0.0.1
 
 
 # @NOTE: some of the flag variables are empty in order to more easily add
@@ -15,56 +12,84 @@ CCOMPILER = clang
 C_STANDARD ?= c99
 FLAG_WALL = -Wall
 FLAG_WERROR = -Werror
-# @NOTE: using '?=' ensures the variable has a fallback value ('-O3', which
-# 	     indicates aggresive optimizations) if it isn't overrided at runtime
-#		 when calling 'make' (such as 'make FLAG_OPTIMZATION_LEVEL="-O0'
-# 		 which gives the 'FLAG_OPTIMZATION_LEVEL' variable the value to the
-# 		 right of the '=' symbol)
 OPTIMIZATION_LEVEL ?= -O0
 CODEGEN_TARGET ?= native
 MISC_FLAGS = -Wno-unused-variable -Wno-unused-function
 CFLAGS = $(OPTIMIZATION_LEVEL) -flto -march=$(CODEGEN_TARGET) $(FLAG_WERROR) $(FLAG_WALL) $(MISC_FLAGS) -std=$(C_STANDARD)
 
 
-ROOT_DIR ?= $(LIB_NAME)
+# @NOTE: top level dirs
+BUILD_DIR = build
+EXAMPLES_DIR = examples
 INCLUDE_DIR = include
-LIB_HEADER_FILE = $(INCLUDE_DIR)/$(LIB_NAME).h
-
 SOURCE_DIR = source
-SOURCE_FILE_MAIN = $(SOURCE_DIR)/main.c
-# create_source_file_main
-SOURCE_FILES = 
 TESTING_DIR = testing
-EXAMPLES_DIR = $(ROOT_DIR)/examples
 
 
-TESTING_BIN_DIR = $(TESTING_DIR)/bin
-TESTING_TARGET = $(TESTING_BIN_DIR)/$(LIB_NAME)
+# @NOTE: build root dirs for examples and testing outputs
+BUILD_EXAMPLES_DIR = $(BUILD_DIR)/examples
+BUILD_TESTING_DIR = $(BUILD_DIR)/testing
 
 
-all: testing_$(LIB_NAME)
-
-# $(LIB_NAME): $(TESTING_TARGET) $(SOURCE_FILES) $(LIB_HEADER_FILE) | create_testing_dir create_test_source_file_main create_testing_bin_dir
-# $(TESTING_TARGET): $(SOURCE_FILES)
-# 	@echo "\n\tBuilding cParse..."
-# 	@$(CCOMPILER) $(CFLAGS) -o $(TESTING_TARGET) $(SOURCE_FILES)
-# 	@echo "\n\n\t...**COMPLETE**\n"
+# @NOTE: lib source/header files
+LIB_SOURCE_FILES = $(SOURCE_DIR)/scanner.c
+LIB_HEADER_FILES = $(SOURCE_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/utils.h
+LIB_TARGET = $(LIB_NAME)
 
 
-testing_$(LIB_NAME): create_source_file_main $(TESTING_TARGET) $(SOURCE_FILES) $(LIB_HEADER_FILE) | create_testing_dir create_test_source_file_main create_testing_bin_dir
-$(TESTING_TARGET): $(SOURCE_FILES)
-	@echo "\n\tBuilding cParse..."
-	@$(CCOMPILER) $(CFLAGS) -o $(TESTING_TARGET) $(SOURCE_FILES)
-	@echo "\n\n\t...**COMPLETE**\n"
+# @NOTE: testing files
+TESTING_FILE_MAIN = $(TESTING_DIR)/main.c
+TESTING_SOURCE_FILES = $(TESTING_FILE_MAIN)
+TESTING_TARGET_NAME = testing_$(LIB_NAME)
+TESTING_TARGET = $(BUILD_TESTING_DIR)/$(TESTING_TARGET_NAME)
 
-create_testing_dir:
-	@mkdir -p $(TESTING_DIR)
 
-create_testing_bin_dir:
+
+
+
+all: $(LIB_TARGET)
+
+
+$(LIB_TARGET): $(LIB_SOURCE_FILES) $(LIB_HEADER_FILES)
+	@echo ""
+	@echo "Building cParse lib..."
+	@echo ""
+	@$(CC) $(CFLAGS) -o $(LIB_TARGET) $(LIB_SOURCE_FILES)
+	@echo ""
+	@echo "...**COMPLETE**"
+	@echo ""
+
+
+testing_target: $(TESTING_TARGET_NAME)
+
+
+$(TESTING_TARGET_NAME): | make_build_dir_for_tests
+	@echo ""
+	@echo "Building cParse dev testing binary..."
+	@echo ""
+	@$(CCOMPILER) $(CFLAGS) -o $(TESTING_TARGET) $(TESTING_SOURCE_FILES)
+	@echo ""
+	@echo "...**COMPLETE**"
+	@echo ""
+
+
+make_build_dir_for_tests:
 	@mkdir -p $(TESTING_BIN_DIR)
 
-create_test_source_file_main:
-	@touch $(TESTING_DIR)/main.c
 
-create_source_file_main:
-	@touch $(SOURCE_FILE_MAIN)
+delete_builds:
+	@rm -r build
+	@mkdir -p build
+
+
+
+##############################################
+# • ---------- MISC INFORMATION ---------- • #
+##############################################
+
+# Compiler flags:
+#		-Wall: all warnings
+#		-Wextra: more warnings
+#		-std=c11: use C11 standard
+#		-march=native: select target architecture for code generation; 'native' automatically detects architecture of the CPU with which the system is being built on
+#		-Wno-unused-variable -Wno-unused-function: supress errors that are generated from variables/functions (respectively) that aren't used
