@@ -38,7 +38,6 @@ LIB_HEADER_FILES = $(SOURCE_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/
 LIB_TARGET = $(LIB_NAME)
 
 
-
 # @NOTE: testing files
 TESTING_SOURCE_FILES = $(TESTING_DIR)/main.c
 TESTING_HEADER_FILES ?= 
@@ -51,8 +50,8 @@ EXAMPLES_arithmeticLang_SOURCE_FILES = $(EXAMPLES_DIR)/arithmeticLang/main.c
 EXAMPLES_arithmeticLang_HEADER_FILES = 
 EXAMPLES_dateLang_SOURCE_FILES = $(EXAMPLES_DIR)/dateLang/main.c
 EXAMPLES_dateLang_HEADER_FILES = 
-EXAMPLES_arithmeticLang_TARGET = $(BUILD_EXAMPLES_DIR)/$(EXAMPLES_PREFIX)arithmeticLang
-EXAMPLES_dateLang_TARGET = $(BUILD_EXAMPLES_DIR)/$(EXAMPLES_PREFIX)dateLang
+EXAMPLES_arithmeticLang_TARGET = $(BUILD_EXAMPLES_DIR)/arithmeticLang/$(EXAMPLES_PREFIX)arithmeticLang
+EXAMPLES_dateLang_TARGET = $(BUILD_EXAMPLES_DIR)/dateLang/$(EXAMPLES_PREFIX)dateLang
 
 
 
@@ -76,19 +75,19 @@ all: examples $(TESTING_TARGET)
 
 # @TODO: Determine how to compose this so that it only compiles if the
 # 		 lib needs it, and if it doesn't, it doesn't cause an error or run
-.PHONY: $(LIB_TARGET) $(LIB_SOURCE_FILES) $(LIB_HEADER_FILES)
-	@echo ""
-	@echo "Building 'cParse' library binaries..."
-	@echo ""
-	@$(CCOMPILER) $(CFLAGS) -o $(LIB_TARGET) $(LIB_SOURCE_FILES)
-	@echo ""
-	@echo "...**COMPLETE**"
-	@echo ""
+# .PHONY: $(LIB_TARGET) $(LIB_SOURCE_FILES) $(LIB_HEADER_FILES)
+# 	@echo ""
+# 	@echo "Building 'cParse' library binaries..."
+# 	@echo ""
+# 	@$(CCOMPILER) $(CFLAGS) -o $(LIB_TARGET) $(LIB_SOURCE_FILES)
+# 	@echo ""
+# 	@echo "...**COMPLETE**"
+# 	@echo ""
 
 
 $(TESTING_TARGET): $(TESTING_SOURCE_FILES) $(TESTING_HEADER_FILES) | create_build_testing_dir
 	@echo ""
-	@echo "Building 'cParse' testing..."
+	@echo "Building 'cParse' testing executable..."
 	@echo ""
 	@$(CCOMPILER) $(CFLAGS) -o $(TESTING_TARGET) $(TESTING_SOURCE_FILES)
 	@echo ""
@@ -99,7 +98,8 @@ $(TESTING_TARGET): $(TESTING_SOURCE_FILES) $(TESTING_HEADER_FILES) | create_buil
 examples: arithmeticLang dateLang | create_build_examples_dir
 
 
-arithmeticLang: | create_build_examples_dir
+arithmeticLang: $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES) | create_build_examples_dir
+	@mkdir -p $(BUILD_EXAMPLES_DIR)/arithmeticLang
 	@echo ""
 	@echo "Building 'aritheticLang' executable..."
 	@echo ""
@@ -109,17 +109,15 @@ arithmeticLang: | create_build_examples_dir
 	@echo ""
 
 
-dateLang: | create_build_examples_dir
+dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | create_build_examples_dir
+	@mkdir -p $(BUILD_EXAMPLES_DIR)/dateLang
 	@echo ""
-	@echo "Building 'aritheticLang' executable..."
+	@echo "Building 'dateLang' executable..."
 	@echo ""
-	@$(CCOMPILER) $(CFLAGS) -o $(EXAMPLES_dateLang_TARGET) $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES)
+	@$(CCOMPILER) $(CFLAGS) -o $(EXAMPLES_dateLang_TARGET) $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES)
 	@echo ""
 	@echo "...**COMPLETE**"
 	@echo ""
-
-
-create_build_dirs: | create_build_testing_dir create_build_examples_dir create_build_testing_dir
 
 
 create_build_examples_dir:

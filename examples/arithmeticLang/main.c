@@ -1,11 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../../source/common.h"
+#include "../../source/utils.h"
+
+
+static int __EXIT_CODE__ = 0;
 
 
 int main(int argc, char* argv[]) {
-	int __EXIT_CODE__ = 0;
-	printf("HELLO MOTO!!!\n");
-	fflush(stdout);
+	ASSERT(__EXIT_CODE__ == 0, "ERROR!!!");
+	PRINT("HELLO FROM 'arithmeticLang'!!!");
 	return __EXIT_CODE__;
 }
