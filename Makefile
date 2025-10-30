@@ -141,8 +141,8 @@ reset:
 	@echo ""
 	@echo "Resetting '$(LIB_NAME)' package to pre-build state..."
 	@echo ""
-	@rm -r $(BUILD_EXAMPLES_DIR)
-	@rm -r $(BUILD_TESTING_DIR)
+	@rm -r -f $(BUILD_EXAMPLES_DIR)
+	@rm -r -f $(BUILD_TESTING_DIR)
 	@echo ""
 	@echo "'$(LIB_NAME)' package has been reset to it's pre-build state..."
 	@echo ""
