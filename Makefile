@@ -55,24 +55,14 @@ EXAMPLES_dateLang_TARGET = $(BUILD_EXAMPLES_DIR)/dateLang/$(EXAMPLES_PREFIX)date
 
 
 
-###################################################################
-#      • ---------- Makefile Rules and Commands ---------- •      #
-###################################################################
+###############################################################
+#      • ---------- Makefile Rules/Commands ---------- •      #
+###############################################################
 
-
-help:
-	@echo " -----------------------  "
-	@echo "|                        |"
-	@echo " ________OPTIONS________  "
-	@echo ""
-	@echo "    • all - creates all "
-	@echo ""
-	@echo ""
-
-
-all: examples $(TESTING_TARGET)
-
-
+# @TODO: Determine how I should use this so that any lib binary/executable
+#		 files that are needed (by the lib, testing, examples, etc.) are
+# 		 generated/created/compiled/etc. and if they are, then don't
+# 		 re-compile
 # @TODO: Determine how to compose this so that it only compiles if the
 # 		 lib needs it, and if it doesn't, it doesn't cause an error or run
 # .PHONY: $(LIB_TARGET) $(LIB_SOURCE_FILES) $(LIB_HEADER_FILES)
@@ -85,7 +75,34 @@ all: examples $(TESTING_TARGET)
 # 	@echo ""
 
 
-$(TESTING_TARGET): $(TESTING_SOURCE_FILES) $(TESTING_HEADER_FILES) | create_build_testing_dir
+help:
+	@echo "\t"
+	@echo "\t ---------------------------------  "
+	@echo "\t|                                  |"
+	@echo "\t ________MAKEFILE-COMMANDS________  "
+	@echo "\t"
+	@echo "\t    • all ---------------> creates all package builds including all lib, testing, and example binaries/executables (and supporting file hierarchy)"
+	@echo "\t    • lib ---------------> creates all lib related binaries/executables (and supporting file hierarchy) ONLY"
+	@echo "\t    • tests -------------> creates testing binaries/executables (and supporting file hierarchy) ONLY"
+	@echo "\t    • examples ----------> creates 'dateLang' and 'arithmeticLang' example binaries/executables"
+	@echo "\t    • arithmeticLang ----> creates 'arithmeticLang' example binaries/executable (and supporting file hierarchy) ONLY"
+	@echo "\t    • dateLang ----------> creates 'dateLang' example binaries/executable (and supporting file hierarchy) ONLY"
+	@echo "\t    • reset -------------> reverts package back to pre-build state, removing all binaries/executables (and supporting file hierarchy)"
+	@echo "\t    • docs --------------> create documentation for lib (and package as a whole)"
+	@echo "\t"
+	@echo "\t"
+
+
+all: examples tests $(TESTING_TARGET)
+
+
+lib:
+	@echo ""
+	@echo "'lib' makefile rule NOT IMPLEMENTED..."
+	@echo ""
+
+
+tests: $(TESTING_SOURCE_FILES) $(TESTING_HEADER_FILES) | __create_build_testing_dir
 	@echo ""
 	@echo "Building 'cParse' testing executable..."
 	@echo ""
@@ -95,13 +112,13 @@ $(TESTING_TARGET): $(TESTING_SOURCE_FILES) $(TESTING_HEADER_FILES) | create_buil
 	@echo ""
 
 
-examples: arithmeticLang dateLang | create_build_examples_dir
+examples: arithmeticLang dateLang | __create_build_examples_dir
 
 
-arithmeticLang: $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES) | create_build_examples_dir
+arithmeticLang: $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES) | __create_build_examples_dir
 	@mkdir -p $(BUILD_EXAMPLES_DIR)/arithmeticLang
 	@echo ""
-	@echo "Building 'aritheticLang' executable..."
+	@echo "Building 'arithmeticLang' executable..."
 	@echo ""
 	@$(CCOMPILER) $(CFLAGS) -o $(EXAMPLES_arithmeticLang_TARGET) $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES)
 	@echo ""
@@ -109,7 +126,7 @@ arithmeticLang: $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLan
 	@echo ""
 
 
-dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | create_build_examples_dir
+dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | __create_build_examples_dir
 	@mkdir -p $(BUILD_EXAMPLES_DIR)/dateLang
 	@echo ""
 	@echo "Building 'dateLang' executable..."
@@ -120,11 +137,32 @@ dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | 
 	@echo ""
 
 
-create_build_examples_dir:
+reset:
+	@echo ""
+	@echo "Resetting '$(LIB_NAME)' package to pre-build state..."
+	@echo ""
+	@rm -r $(BUILD_EXAMPLES_DIR)
+	@rm -r $(BUILD_TESTING_DIR)
+	@echo ""
+	@echo "'$(LIB_NAME)' package has been reset to it's pre-build state..."
+	@echo ""
+
+
+docs:
+	@echo ""
+	@echo "'docs' makefile rule NOT IMPLEMENTED..."
+	@echo ""
+
+
+###########################################
+# • ---------- UTILITY RULES ---------- • #
+###########################################
+
+__create_build_examples_dir:
 	@mkdir -p $(BUILD_EXAMPLES_DIR)
 
 
-create_build_testing_dir:
+__create_build_testing_dir:
 	@mkdir -p $(BUILD_TESTING_DIR)
 
 
