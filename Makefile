@@ -77,9 +77,9 @@ EXAMPLES_dateLang_TARGET = $(BUILD_EXAMPLES_DIR)/dateLang/$(EXAMPLES_PREFIX)date
 
 help:
 	@echo "\t"
-	@echo "\t ---------------------------------  "
-	@echo "\t|                                  |"
-	@echo "\t ________MAKEFILE-COMMANDS________  "
+	@echo "\t --------------------------------------------  "
+	@echo "\t|                                             |"
+	@echo "\t ________'cParse' - MAKEFILE COMMANDS________  "
 	@echo "\t"
 	@echo "\t    • all ---------------> creates all package builds including all lib, testing, and example binaries/executables (and supporting file hierarchy)"
 	@echo "\t    • lib ---------------> creates all lib related binaries/executables (and supporting file hierarchy) ONLY"
