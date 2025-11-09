@@ -16,6 +16,7 @@ FLAG_WERROR ?= -Werror
 OPTIMIZATION_LEVEL ?= -O0
 CODEGEN_TARGET ?= native
 MISC_FLAGS ?= -Wno-unused-variable -Wno-unused-function
+INCLUDE ?= 
 CFLAGS ?= $(OPTIMIZATION_LEVEL) -flto -march=$(CODEGEN_TARGET) $(FLAG_WERROR) $(FLAG_WALL) $(MISC_FLAGS) $(C_STANDARD)
 
 
@@ -33,14 +34,14 @@ BUILD_TESTING_DIR = $(BUILD_DIR)/testing
 
 
 # @NOTE: lib source/header files realted to the library
-LIB_SOURCE_FILES = $(SOURCE_DIR)/scanner.c
-LIB_HEADER_FILES = $(SOURCE_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/utils.h
+LIB_SOURCE_FILES = $(SOURCE_DIR)/parser.c $(SOURCE_DIR)/scanner.c
+LIB_HEADER_FILES = $(SOURCE_DIR)/parser.h $(SOURCE_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/utils.h
 LIB_TARGET = $(LIB_NAME)
 
 
 # @NOTE: testing files
-TESTING_SOURCE_FILES = $(TESTING_DIR)/main.c
-TESTING_HEADER_FILES ?= 
+TESTING_SOURCE_FILES = $(TESTING_DIR)/main.c $(LIB_SOURCE_FILES)
+TESTING_HEADER_FILES = $(LIB_HEADER_FILES)
 TESTING_TARGET = $(BUILD_TESTING_DIR)/testing_$(LIB_NAME)
 
 
@@ -52,6 +53,14 @@ EXAMPLES_dateLang_SOURCE_FILES = $(EXAMPLES_DIR)/dateLang/main.c
 EXAMPLES_dateLang_HEADER_FILES = 
 EXAMPLES_arithmeticLang_TARGET = $(BUILD_EXAMPLES_DIR)/arithmeticLang/$(EXAMPLES_PREFIX)arithmeticLang
 EXAMPLES_dateLang_TARGET = $(BUILD_EXAMPLES_DIR)/dateLang/$(EXAMPLES_PREFIX)dateLang
+
+
+# @NOTE: basic compile command
+ifeq ($(strip $(INCLUDE)),)
+	COMPILE = $(CCOMPILER) $(CFLAGS) -o
+else
+	COMPILE = $(CCOMPILER) $(CFLAGS) -I$(INCLUDE) -o
+endif
 
 
 
@@ -106,7 +115,7 @@ tests: $(TESTING_SOURCE_FILES) $(TESTING_HEADER_FILES) | __create_build_testing_
 	@echo ""
 	@echo "Building 'cParse' testing executable..."
 	@echo ""
-	@$(CCOMPILER) $(CFLAGS) -o $(TESTING_TARGET) $(TESTING_SOURCE_FILES)
+	@$(COMPILE) $(TESTING_TARGET) $(TESTING_SOURCE_FILES)
 	@echo ""
 	@echo "...**COMPLETE**"
 	@echo ""
@@ -120,7 +129,7 @@ arithmeticLang: $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLan
 	@echo ""
 	@echo "Building 'arithmeticLang' executable..."
 	@echo ""
-	@$(CCOMPILER) $(CFLAGS) -o $(EXAMPLES_arithmeticLang_TARGET) $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES)
+	@$(COMPILE) $(EXAMPLES_arithmeticLang_TARGET) $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES)
 	@echo ""
 	@echo "...**COMPLETE**"
 	@echo ""
@@ -131,7 +140,7 @@ dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | 
 	@echo ""
 	@echo "Building 'dateLang' executable..."
 	@echo ""
-	@$(CCOMPILER) $(CFLAGS) -o $(EXAMPLES_dateLang_TARGET) $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES)
+	@$(COMPILE) $(EXAMPLES_dateLang_TARGET) $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES)
 	@echo ""
 	@echo "...**COMPLETE**"
 	@echo ""
