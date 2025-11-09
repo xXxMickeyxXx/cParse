@@ -47,8 +47,8 @@ TESTING_TARGET = $(BUILD_TESTING_DIR)/testing_$(LIB_NAME)
 
 # @NOTE: files and dirs related to the package's examples
 EXAMPLES_PREFIX = example_
-EXAMPLES_arithmeticLang_SOURCE_FILES = $(EXAMPLES_DIR)/arithmeticLang/main.c
-EXAMPLES_arithmeticLang_HEADER_FILES = 
+EXAMPLES_arithmeticLang_SOURCE_FILES = $(EXAMPLES_DIR)/arithmeticLang/main.c $(LIB_SOURCE_FILES)
+EXAMPLES_arithmeticLang_HEADER_FILES = $(LIB_HEADER_FILES)
 EXAMPLES_dateLang_SOURCE_FILES = $(EXAMPLES_DIR)/dateLang/main.c
 EXAMPLES_dateLang_HEADER_FILES = 
 EXAMPLES_arithmeticLang_TARGET = $(BUILD_EXAMPLES_DIR)/arithmeticLang/$(EXAMPLES_PREFIX)arithmeticLang
@@ -129,7 +129,7 @@ arithmeticLang: $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLan
 	@echo ""
 	@echo "Building 'arithmeticLang' executable..."
 	@echo ""
-	@$(COMPILE) $(EXAMPLES_arithmeticLang_TARGET) $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES)
+	@$(COMPILE) $(EXAMPLES_arithmeticLang_TARGET) $(EXAMPLES_arithmeticLang_SOURCE_FILES)
 	@echo ""
 	@echo "...**COMPLETE**"
 	@echo ""
