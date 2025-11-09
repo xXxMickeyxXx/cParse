@@ -4,11 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <assert.h>
 
+#include "common.h"
 
+
+#define FORMAT_STRING(format_text, ...) (__format_string(format_text, __VA_ARGS__))
 #define WHITESPACE_RTRIM(str) (__trim_whitespace_right(str))
 #define ENDS_WITH(character, str) (__ends_with(character, str))
 #define TO_LOWERCASE(str) (__make_lowercased(str))
@@ -103,6 +107,26 @@ static void __display_targs(int argc, char* argv[]) {
 		printf("%s\n", argv[i]);
 		fflush(stdout);
 	}
+}
+
+
+static char* __format_string(const char* format, ...) {
+	if (!format) return NULL;
+	va_list args;
+	va_start(args, format);
+
+	int size = vsnprintf(NULL, 0, format, args);
+	va_end(args);
+
+	if (size < 0) return NULL;
+
+	char* buffer = (char*)malloc(size + 1);
+	if (!buffer) return NULL;
+
+	va_start(args, format);
+	vsnprintf(buffer, size + 1, format, args);
+	va_end(args);
+	return buffer;
 }
 
 

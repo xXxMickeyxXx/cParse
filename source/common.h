@@ -5,7 +5,7 @@
 // @NOTE: convenience macros
 #define TRUE (true)
 #define FALSE (false)
-#define NULL_CHAR '\0'
+#define NULL_CHAR ('\0')
 
 
 // @NOTE: convenience macros for outputting to terminal

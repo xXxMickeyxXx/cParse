@@ -4,23 +4,47 @@
 #include <stdlib.h>
 
 
-typedef struct {
-	void* input
-} cParserInput;
+// typedef struct {
+
+// } Cursor;
 
 
 typedef struct {
-	void* data
-} cParserOutput;
+	void* node_id;
+} Node;
 
 
 typedef struct {
-	const char* parser_id;
-	cParserResult _parse_result;
+	size_t capacity;
+	size_t count;
+	Node* nodes;
+} NodeArray;
+
+
+typedef struct {
+	void* graph_id;
+	NodeArray nodes;	
+} Graph;
+
+
+// typedef struct {
+// 	void* input
+// } cParserInput;
+
+
+// typedef struct {
+// 	void* data;
+// } cParserOutput;
+
+
+typedef struct {
+	void* parser_id;
 } cParser;
 
 
-cParser* new_parser(void);
+cParser* __new_cParser__(void* parser_id);
+void __init_cParser__(cParser* self, void* parser_id);
+void __free_cParser__(cParser* self);
 
 
 #endif
