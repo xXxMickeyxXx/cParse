@@ -1,8 +1,8 @@
 #include <stdio.h>
 
 #include "parser.h"
-#include "utils.h"
-#include "common.h"
+#include "../utils/common.h"
+#include "../utils/utils.h"
 
 
 cParser* __new_cParser__(void* parser_id) {

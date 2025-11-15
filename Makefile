@@ -25,6 +25,7 @@ BUILD_DIR = build
 EXAMPLES_DIR = examples
 INCLUDE_DIR = include
 SOURCE_DIR = source
+UTILS_DIR = "utils"
 TESTING_DIR = testing
 
 
@@ -35,20 +36,20 @@ BUILD_TESTING_DIR = $(BUILD_DIR)/testing
 
 # @NOTE: lib source/header files realted to the library
 LIB_SOURCE_FILES = $(SOURCE_DIR)/parser.c $(SOURCE_DIR)/scanner.c
-LIB_HEADER_FILES = $(SOURCE_DIR)/parser.h $(SOURCE_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/utils.h
+LIB_HEADER_FILES = $(SOURCE_DIR)/parser.h $(UTILS_DIR)/common.h $(SOURCE_DIR)/scanner.h $(UTILS_DIR)/utils.h
 LIB_TARGET = $(LIB_NAME)
 
 
 # @NOTE: testing files
 TESTING_SOURCE_FILES = $(TESTING_DIR)/main.c $(LIB_SOURCE_FILES)
-TESTING_HEADER_FILES = $(LIB_HEADER_FILES)
+TESTING_HEADER_FILES = 
 TESTING_TARGET = $(BUILD_TESTING_DIR)/testing_$(LIB_NAME)
 
 
 # @NOTE: files and dirs related to the package's examples
 EXAMPLES_PREFIX = example_
 EXAMPLES_arithmeticLang_SOURCE_FILES = $(EXAMPLES_DIR)/arithmeticLang/main.c $(LIB_SOURCE_FILES)
-EXAMPLES_arithmeticLang_HEADER_FILES = $(LIB_HEADER_FILES)
+EXAMPLES_arithmeticLang_HEADER_FILES =
 EXAMPLES_dateLang_SOURCE_FILES = $(EXAMPLES_DIR)/dateLang/main.c
 EXAMPLES_dateLang_HEADER_FILES = 
 EXAMPLES_arithmeticLang_TARGET = $(BUILD_EXAMPLES_DIR)/arithmeticLang/$(EXAMPLES_PREFIX)arithmeticLang
