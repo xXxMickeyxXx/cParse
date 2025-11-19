@@ -42,9 +42,14 @@ typedef struct {
 } cParser;
 
 
+// @NOTE: parser reification
 cParser* __new_cParser__(void* parser_id);
 void __init_cParser__(cParser* self, void* parser_id);
 void __free_cParser__(cParser* self);
+
+
+// @NOTE: parser actions
+void* parse(Token token);
 
 
 #endif
