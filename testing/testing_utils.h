@@ -22,11 +22,13 @@ typedef void (*TEST_CASE_t)(void);
 
 
 static inline void __display_test_result(bool condition, int test_number, int total_tests) {
+	PRINT("\n");
 	if (condition) {
 		TEST_PASSED(test_number, total_tests);
 	} else {
 		TEST_FAILED(test_number, total_tests);
 	}
+	PRINT("\n");
 }
 
 
