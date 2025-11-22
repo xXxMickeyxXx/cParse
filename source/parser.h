@@ -16,9 +16,6 @@ typedef struct {
 } Node;
 
 
-// @NOTE: **THIS IS A NOTE TO CHECK HOW GIT WORKS WITH MY CURRENT GIT WORKFLOW-APPROACH ---> CREATED IN DEV BRANCH
-
-
 typedef struct {
 	size_t capacity;
 	size_t count;
