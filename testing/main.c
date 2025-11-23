@@ -1,12 +1,12 @@
+#include <stdio.h>
 #include <string.h>
 
 #include <cParse.h>
+#include "testing_utils.h"
+
 #include "../source/parser.h"
 #include "../source/scanner.h"
-#include "testing_utils.h"
 #include "../source/tensor.h"
-
-#include "testing_SIMD_matmul.h"
 
 
 #define TEST_CASE_COUNT (3)
@@ -24,11 +24,13 @@ void test_cParser(void) {
 }
 
 
-void test_Tensor_new_and_free(void) {
-	size_t example_tensor_shape[4] = {1, 1, 4, 4};
-	Tensor* new_test_tensor = NEW_Tensor(4, example_tensor_shape, sizeof(uint64_t));
+void test_new_Tensor(void) {
+	size_t example_tensor_shape[4] = {1, 1, 4, 4, 10};
+	Tensor new_test_tensor = NEW_Tensor(5, example_tensor_shape, sizeof(uint64_t));
 
-	bool test_case_condition = FREE_Tensor(new_test_tensor) >= 0;
+	printf("TENSOR COUNT ---> %zu\n", new_test_tensor.count);
+
+	bool test_case_condition = FALSE;
 	DISPLAY_TEST_RESULT(test_case_condition, 3, TEST_CASE_COUNT);
 }
 
@@ -38,7 +40,7 @@ int main(int argc, char* argv[]) {
 	TEST_CASE_t TEST_CASES[TEST_CASE_COUNT] = {
 		test_scanner,
 		test_cParser,
-		test_Tensor_new_and_free
+		test_new_Tensor
 	};
 	
 	for (int i = 0; i < TEST_CASE_COUNT; i++) {
