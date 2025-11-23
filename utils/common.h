@@ -2,10 +2,22 @@
 #include <stdbool.h>
 
 
-// @NOTE: convenience macros
-#define TRUE (true)
-#define FALSE (false)
-#define NULL_CHAR ('\0')
+// @NOTE: convenience macros; defining them via 'ifndef' directive to ensure
+//		  they haven't been defined before, in case different 3rd party code
+//		  does so. Solution isn't foolproof since the 'TRUE' and/or 'FALSE'
+//		  macros may not be defined the same as they are intended to be, between
+//		  code sources
+#ifndef TRUE
+	#define TRUE (true)
+#endif
+
+#ifndef FALSE
+	#define FALSE (false)
+#endif
+
+#ifndef NULL_CHAR
+	#define NULL_CHAR ('\0')
+#endif
 
 
 // @NOTE: convenience macros for outputting to terminal
