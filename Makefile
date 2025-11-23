@@ -35,8 +35,8 @@ BUILD_TESTING_DIR = $(BUILD_DIR)/testing
 
 
 # @NOTE: lib source/header files realted to the library
-LIB_SOURCE_FILES = $(SOURCE_DIR)/parser.c $(SOURCE_DIR)/scanner.c
-LIB_HEADER_FILES = $(SOURCE_DIR)/parser.h $(UTILS_DIR)/common.h $(SOURCE_DIR)/scanner.h $(UTILS_DIR)/utils.h
+LIB_SOURCE_FILES = $(SOURCE_DIR)/parser.c $(SOURCE_DIR)/scanner.c $(SOURCE_DIR)/tensor.c
+LIB_HEADER_FILES = $(SOURCE_DIR)/parser.h $(UTILS_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/tensor.h $(UTILS_DIR)/utils.h
 LIB_TARGET = $(LIB_NAME)
 
 
