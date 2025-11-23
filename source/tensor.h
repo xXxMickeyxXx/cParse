@@ -9,15 +9,12 @@
 
 
 typedef struct {
-	void* data;
 	size_t element_size;
-
-	size_t* shape;
-	size_t* strides;
-
 	size_t rank;
 	size_t count;
-
+	size_t *shape;
+	size_t *strides;
+	void* data;
 } Tensor;
 
 
