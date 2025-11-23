@@ -25,7 +25,7 @@ void test_cParser(void) {
 
 
 void test_new_Tensor(void) {
-	size_t example_tensor_shape[4] = {1, 1, 4, 4, 10};
+	size_t example_tensor_shape[5] = {1, 1, 4, 4, 10};
 	Tensor new_test_tensor = NEW_Tensor(5, example_tensor_shape, sizeof(uint64_t));
 
 	printf("TENSOR COUNT ---> %zu\n", new_test_tensor.count);
