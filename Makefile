@@ -16,7 +16,7 @@ FLAG_WERROR ?= -Werror
 OPTIMIZATION_LEVEL ?= -O0
 CODEGEN_TARGET ?= native
 MISC_FLAGS ?= -Wno-unused-variable -Wno-unused-function
-INCLUDE ?= 
+INCLUDE ?= /Users/mickey/Desktop/C_Lang/libs/cparse/include
 CFLAGS ?= $(OPTIMIZATION_LEVEL) -flto -march=$(CODEGEN_TARGET) $(FLAG_WERROR) $(FLAG_WALL) $(MISC_FLAGS) $(C_STANDARD)
 
 
