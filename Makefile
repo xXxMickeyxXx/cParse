@@ -17,6 +17,7 @@ OPTIMIZATION_LEVEL ?= -O0
 CODEGEN_TARGET ?= native
 MISC_FLAGS ?= -Wno-unused-variable -Wno-unused-function
 INCLUDE ?= /Users/mickey/Desktop/C_Lang/libs/cparse/include
+RESET ?= all
 CFLAGS ?= $(OPTIMIZATION_LEVEL) -flto -march=$(CODEGEN_TARGET) $(FLAG_WERROR) $(FLAG_WALL) $(MISC_FLAGS) $(C_STANDARD)
 
 
@@ -48,11 +49,17 @@ TESTING_TARGET = $(BUILD_TESTING_DIR)/testing_$(LIB_NAME)
 
 # @NOTE: files and dirs related to the package's examples
 EXAMPLES_PREFIX = example_
+
+EXAMPLES_abcLang_SOURCE_FILES = $(EXAMPLES_DIR)/abcLang/main.c $(LIB_SOURCE_FILES)
+EXAMPLES_abcLang_HEADER_FILES =
+EXAMPLES_abcLang_TARGET = $(BUILD_EXAMPLES_DIR)/abcLang/$(EXAMPLES_PREFIX)abcLang
+
 EXAMPLES_arithmeticLang_SOURCE_FILES = $(EXAMPLES_DIR)/arithmeticLang/main.c $(LIB_SOURCE_FILES)
 EXAMPLES_arithmeticLang_HEADER_FILES =
+EXAMPLES_arithmeticLang_TARGET = $(BUILD_EXAMPLES_DIR)/arithmeticLang/$(EXAMPLES_PREFIX)arithmeticLang
+
 EXAMPLES_dateLang_SOURCE_FILES = $(EXAMPLES_DIR)/dateLang/main.c
 EXAMPLES_dateLang_HEADER_FILES = 
-EXAMPLES_arithmeticLang_TARGET = $(BUILD_EXAMPLES_DIR)/arithmeticLang/$(EXAMPLES_PREFIX)arithmeticLang
 EXAMPLES_dateLang_TARGET = $(BUILD_EXAMPLES_DIR)/dateLang/$(EXAMPLES_PREFIX)dateLang
 
 
@@ -62,6 +69,10 @@ ifeq ($(strip $(INCLUDE)),)
 else
 	COMPILE = $(CCOMPILER) $(CFLAGS) -I$(INCLUDE) -o
 endif
+
+# @NOTE: misc commands
+BUILD_SUB_PACKAGES = $(TESTING_TARGET) $(BUILD_EXAMPLES_DIR)/abcLang $(BUILD_EXAMPLES_DIR)/arithmeticLang $(BUILD_EXAMPLES_DIR)/dateLang
+RESET_COMMANDS = $(foreach _sub_package, $(BUILD_SUB_PACKAGES), @echo "\n\t• $(_sub_package)")
 
 
 
@@ -94,7 +105,8 @@ help:
 	@echo "\t    • all ---------------> creates all package builds including all lib, testing, and example binaries/executables (and supporting file hierarchy)"
 	@echo "\t    • lib ---------------> creates all lib related binaries/executables (and supporting file hierarchy) ONLY"
 	@echo "\t    • tests -------------> creates testing binaries/executables (and supporting file hierarchy) ONLY"
-	@echo "\t    • examples ----------> creates 'dateLang' and 'arithmeticLang' example binaries/executables"
+	@echo "\t    • examples ----------> creates 'abcLang', 'arithmeticLang', and 'dateLang' example binaries/executables"
+	@echo "\t    • abcLang -----------> creates 'abcLang' example binaries/executable (and supporting file hierarchy) ONLY"
 	@echo "\t    • arithmeticLang ----> creates 'arithmeticLang' example binaries/executable (and supporting file hierarchy) ONLY"
 	@echo "\t    • dateLang ----------> creates 'dateLang' example binaries/executable (and supporting file hierarchy) ONLY"
 	@echo "\t    • reset -------------> reverts package back to pre-build state, removing all binaries/executables (and supporting file hierarchy)"
@@ -122,7 +134,18 @@ tests: $(TESTING_SOURCE_FILES) $(TESTING_HEADER_FILES) | __create_build_testing_
 	@echo ""
 
 
-examples: arithmeticLang dateLang | __create_build_examples_dir
+examples: abcLang arithmeticLang dateLang | __create_build_examples_dir
+
+
+abcLang: $(EXAMPLES_abcLang_SOURCE_FILES) $(EXAMPLES_abcLang_HEADER_FILES) | __create_build_examples_dir
+	@mkdir -p $(BUILD_EXAMPLES_DIR)/abcLang
+	@echo ""
+	@echo "Building 'abcLang' executable..."
+	@echo ""
+	@$(COMPILE) $(EXAMPLES_abcLang_TARGET) $(EXAMPLES_abcLang_SOURCE_FILES)
+	@echo ""
+	@echo "...**COMPLETE**"
+	@echo ""
 
 
 arithmeticLang: $(EXAMPLES_arithmeticLang_SOURCE_FILES) $(EXAMPLES_arithmeticLang_HEADER_FILES) | __create_build_examples_dir
@@ -148,14 +171,41 @@ dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | 
 
 
 reset:
-	@echo ""
-	@echo "Resetting '$(LIB_NAME)' package to pre-build state..."
-	@echo ""
-	@rm -r -f $(BUILD_EXAMPLES_DIR)
-	@rm -r -f $(BUILD_TESTING_DIR)
-	@echo ""
-	@echo "'$(LIB_NAME)' package has been reset to it's pre-build state..."
-	@echo ""
+	@echo "";
+	@if [ "$(RESET)" = "all" ]; then \
+		rm -r -f $(BUILD_EXAMPLES_DIR); \
+		rm -r -f $(BUILD_TESTING_DIR); \
+	elif [ "$(RESET)" = "examples" ]; then \
+		echo "Resetting 'build/examples' to pre-build state..."; \
+		echo ""; \
+		rm -r -f $(BUILD_EXAMPLES_DIR); \
+	elif [ "$(RESET)" = "testing" ]; then \
+		echo "Resetting 'testing' packaging to pre-build state..."; \
+		echo ""; \
+		rm -r -f $(BUILD_TESTING_DIR); \
+	elif [ "$(RESET)" = "abcLang" ]; then \
+		echo "Resetting 'abcLang' example to pre-build state..."; \
+		echo ""; \
+		rm -r -f $(BUILD_EXAMPLES_DIR)/abcLang; \
+	elif [ "$(RESET)" = "arithmeticLang" ]; then \
+		echo "Resetting 'arithmeticLang' example to pre-build state..."; \
+		echo ""; \
+		rm -r -f $(BUILD_EXAMPLES_DIR)/arithmeticLang; \
+	elif [ "$(RESET)" = "dateLang" ]; then \
+		echo "Resetting 'dateLang' example to pre-build state..."; \
+		echo ""; \
+		rm -r -f $(BUILD_EXAMPLES_DIR)/dateLang; \
+	else \
+		echo "INVALID 'RESET' VALUE: '$(RESET)'; must be ONE of the following selections"; \
+		echo "\n\t• all"; \
+		echo "\n\t• abcLang"; \
+		echo "\n\t• arithmeticLang"; \
+		echo "\n\t• dateLang"; \
+		echo "\n\t• testing"; \
+	fi
+	@echo "";
+	@echo "$(LIB_NAME) package has been reset to it's state prior to building with rule '$(RESET)'...";
+	@echo "";
 
 
 docs:

@@ -8,6 +8,7 @@
 
 int main(int argc, char* argv[]) {
 	PRINT("\n");
+	PRINT("\n\t[ • WELCOME TO 'cParse' • ]\n\n");
 	PRINT("CREATING 'cParser'...");
 	cParser* _new_test_parser = NEW_cParser((&((int){1001})));
 	PRINT("FREE-ING 'cParser'...");

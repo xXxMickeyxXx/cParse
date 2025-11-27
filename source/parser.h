@@ -4,6 +4,10 @@
 #include <stdlib.h>
 
 #include "scanner.h"
+#include "tensor.h"
+
+
+typedef void (*emit)(void* action_id, void* args);
 
 
 // typedef struct {

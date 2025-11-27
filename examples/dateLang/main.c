@@ -1,5 +1,9 @@
-#include "../../source/common.h"
-#include "../../source/utils.h"
+#include <stdio.h>
+#include <string.h>
+
+#include <cParse.h>
+#include "../../utils/common.h"
+#include "../../utils/utils.h"
 
 
 static int __EXIT_CODE__ = 0;
