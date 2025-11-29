@@ -3,11 +3,11 @@
 
 
 // @NOTE: macros for handling the lifetime of the parser, 'cParser' 
-#define NEW_cParser(parser_id) (__new_cParser__((void*)(parser_id)))
-#define FREE_cParser(self) (__free_cParser__((self)))
+#define NEW_PARSER(parser_id) (__new_cParser__((void*)(parser_id)))
+#define FREE_PARSER(self) (__free_cParser__((self)))
 
 // @NOTE: conveinance macros for 'cParser' type
-#define cParser_ID(self) ((self)->parser_id)
+#define PARSER_ID(self) ((self)->parser_id)
 
 
 // @NOTE: conveinance macros for 'Tensor' types

@@ -17,7 +17,7 @@ OPTIMIZATION_LEVEL ?= -O0
 CODEGEN_TARGET ?= native
 MISC_FLAGS ?= -Wno-unused-variable -Wno-unused-function
 INCLUDE ?= /Users/mickey/Desktop/C_Lang/libs/cparse/include
-RESET ?= all
+R_ID ?= all
 CFLAGS ?= $(OPTIMIZATION_LEVEL) -flto -march=$(CODEGEN_TARGET) $(FLAG_WERROR) $(FLAG_WALL) $(MISC_FLAGS) $(C_STANDARD)
 
 
@@ -72,7 +72,11 @@ endif
 
 # @NOTE: misc commands
 BUILD_SUB_PACKAGES = $(TESTING_TARGET) $(BUILD_EXAMPLES_DIR)/abcLang $(BUILD_EXAMPLES_DIR)/arithmeticLang $(BUILD_EXAMPLES_DIR)/dateLang
-RESET_COMMANDS = $(foreach _sub_package, $(BUILD_SUB_PACKAGES), @echo "\n\t• $(_sub_package)")
+
+# @NOTE: output formatting
+COLOR_STR ?= **INVALID**
+COLOR_NUM ?= 196
+COLOR_TEXT = \033[38;5;$(COLOR_NUM)m$(COLOR_STR)\033[0m
 
 
 
@@ -103,12 +107,12 @@ help:
 	@echo "\t ________'cParse' - MAKEFILE COMMANDS________  "
 	@echo "\t"
 	@echo "\t    • all ---------------> creates all package builds including all lib, testing, and example binaries/executables (and supporting file hierarchy)"
-	@echo "\t    • lib ---------------> creates all lib related binaries/executables (and supporting file hierarchy) ONLY"
-	@echo "\t    • tests -------------> creates testing binaries/executables (and supporting file hierarchy) ONLY"
+	@echo "\t    • lib ---------------> creates all lib related binaries/executables (and supporting file hierarchy) **ONLY**"
+	@echo "\t    • tests -------------> creates testing binaries/executables (and supporting file hierarchy) **ONLY**"
 	@echo "\t    • examples ----------> creates 'abcLang', 'arithmeticLang', and 'dateLang' example binaries/executables"
-	@echo "\t    • abcLang -----------> creates 'abcLang' example binaries/executable (and supporting file hierarchy) ONLY"
-	@echo "\t    • arithmeticLang ----> creates 'arithmeticLang' example binaries/executable (and supporting file hierarchy) ONLY"
-	@echo "\t    • dateLang ----------> creates 'dateLang' example binaries/executable (and supporting file hierarchy) ONLY"
+	@echo "\t    • abcLang -----------> creates 'abcLang' example binaries/executable (and supporting file hierarchy) **ONLY**"
+	@echo "\t    • arithmeticLang ----> creates 'arithmeticLang' example binaries/executable (and supporting file hierarchy) **ONLY**"
+	@echo "\t    • dateLang ----------> creates 'dateLang' example binaries/executable (and supporting file hierarchy) **ONLY**"
 	@echo "\t    • reset -------------> reverts package back to pre-build state, removing all binaries/executables (and supporting file hierarchy)"
 	@echo "\t    • docs --------------> create documentation for lib (and package as a whole)"
 	@echo "\t"
@@ -172,39 +176,55 @@ dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | 
 
 reset:
 	@echo "";
-	@if [ "$(RESET)" = "all" ]; then \
+	@if [ "$(R_ID)" = "all" ]; then \
+		echo "Resetting all builds contained in 'build' dir..."; \
+		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR); \
 		rm -r -f $(BUILD_TESTING_DIR); \
-	elif [ "$(RESET)" = "examples" ]; then \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo ""; \
+	elif [ "$(R_ID)" = "examples" ]; then \
 		echo "Resetting 'build/examples' to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR); \
-	elif [ "$(RESET)" = "testing" ]; then \
-		echo "Resetting 'testing' packaging to pre-build state..."; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo ""; \
+	elif [ "$(R_ID)" = "tests" ]; then \
+		echo "Resetting 'tests' packaging to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_TESTING_DIR); \
-	elif [ "$(RESET)" = "abcLang" ]; then \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo ""; \
+	elif [ "$(R_ID)" = "abcLang" ]; then \
 		echo "Resetting 'abcLang' example to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR)/abcLang; \
-	elif [ "$(RESET)" = "arithmeticLang" ]; then \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo ""; \
+	elif [ "$(R_ID)" = "arithmeticLang" ]; then \
 		echo "Resetting 'arithmeticLang' example to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR)/arithmeticLang; \
-	elif [ "$(RESET)" = "dateLang" ]; then \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo ""; \
+	elif [ "$(R_ID)" = "dateLang" ]; then \
 		echo "Resetting 'dateLang' example to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR)/dateLang; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo ""; \
 	else \
-		echo "INVALID 'RESET' VALUE: '$(RESET)'; must be ONE of the following selections"; \
-		echo "\n\t• all"; \
-		echo "\n\t• abcLang"; \
-		echo "\n\t• arithmeticLang"; \
-		echo "\n\t• dateLang"; \
-		echo "\n\t• testing"; \
+		echo ""; \
+		echo "\t$(COLOR_TEXT) - INPUT $(R_ID)' FOR 'R_ID' flag-variable must be ONE of the following selections\n"; \
+		echo "\t\t• all"; \
+		echo "\t\t• abcLang"; \
+		echo "\t\t• arithmeticLang"; \
+		echo "\t\t• dateLang"; \
+		echo "\t\t• tests"; \
+		echo "\n"; \
 	fi
 	@echo "";
-	@echo "$(LIB_NAME) package has been reset to it's state prior to building with rule '$(RESET)'...";
+	@echo "$(COLOR_TEXT)";
 	@echo "";
 
 
