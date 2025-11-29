@@ -224,8 +224,6 @@ reset:
 		echo "\n"; \
 	fi
 	@echo "";
-	@echo "$(COLOR_TEXT)";
-	@echo "";
 
 
 docs:
