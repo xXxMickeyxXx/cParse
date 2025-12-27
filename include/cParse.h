@@ -1,5 +1,13 @@
 #include "../source/parser.h"
+#include "../source/grammar.h"
 #include "../source/tensor.h"
+
+
+// @NOTE: macros for handling the lifetime of the parser grammar structure (and containing graph structure)
+#define NEW_GRAPH(node_count, arc_count) (__new_Graph__(node_count, arc_count))
+#define FREE_GRAPH(graph) (__free_Graph__(graph))
+#define GRAMMAR(grammar_id, graph) (__new_Grammar__(grammar_id, graph))
+#define FREE_GRAMMAR(grammar) (__free_Grammar__(grammar))
 
 
 // @NOTE: macros for handling the lifetime of the parser, 'cParser' 

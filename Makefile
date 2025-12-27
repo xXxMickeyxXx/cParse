@@ -5,7 +5,8 @@
 CCOMPILER ?= clang
 LIB_NAME = cParse
 SEMVAR ?= 0.0.1
-PACKAGE_ROOT ?=  # @NOTE: empty to allow for the app to be built in specified directory
+# @NOTE: empty to allow for the app to be built in specified directory
+PACKAGE_ROOT ?=
 
 
 # @NOTE: some of the flag variables are empty in order to more easily add
@@ -17,7 +18,10 @@ OPTIMIZATION_LEVEL ?= -O0
 CODEGEN_TARGET ?= native
 MISC_FLAGS ?= -Wno-unused-variable -Wno-unused-function
 INCLUDE ?= /Users/mickey/Desktop/C_Lang/libs/cparse/include
+# @COMPLETE[2025-12-18] -- @TODO[2025-12-18]: remove all uses of 'R_ID' as it will ultimately be replaced with 'ID'
 R_ID ?= all
+# @COMPLETE[2025-12-18] -- @NOTE[2025-12-18]: 'ID' replacing 'R_ID'
+ID ?= all
 CFLAGS ?= $(OPTIMIZATION_LEVEL) -flto -march=$(CODEGEN_TARGET) $(FLAG_WERROR) $(FLAG_WALL) $(MISC_FLAGS) $(C_STANDARD)
 
 
@@ -36,8 +40,8 @@ BUILD_TESTING_DIR = $(BUILD_DIR)/testing
 
 
 # @NOTE: lib source/header files realted to the library
-LIB_SOURCE_FILES = $(SOURCE_DIR)/parser.c $(SOURCE_DIR)/scanner.c $(SOURCE_DIR)/tensor.c
-LIB_HEADER_FILES = $(SOURCE_DIR)/parser.h $(UTILS_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/tensor.h $(UTILS_DIR)/utils.h
+LIB_SOURCE_FILES = $(SOURCE_DIR)/parser.c $(SOURCE_DIR)/scanner.c $(SOURCE_DIR)/tensor.c $(SOURCE_DIR)/grammar.c
+LIB_HEADER_FILES = $(SOURCE_DIR)/parser.h $(UTILS_DIR)/common.h $(SOURCE_DIR)/scanner.h $(SOURCE_DIR)/tensor.h $(SOURCE_DIR)/grammar.h $(UTILS_DIR)/utils.h
 LIB_TARGET = $(LIB_NAME)
 
 
@@ -62,6 +66,10 @@ EXAMPLES_dateLang_SOURCE_FILES = $(EXAMPLES_DIR)/dateLang/main.c
 EXAMPLES_dateLang_HEADER_FILES = 
 EXAMPLES_dateLang_TARGET = $(BUILD_EXAMPLES_DIR)/dateLang/$(EXAMPLES_PREFIX)dateLang
 
+EXAMPLES_LitScrip_SOURCE_FILES = $(EXAMPLES_DIR)/LitScrip/main.c $(LIB_SOURCE_FILES)
+EXAMPLES_LitScrip_HEADER_FILES =
+EXAMPLES_LitScrip_TARGET = $(BUILD_EXAMPLES_DIR)/LitScrip/$(EXAMPLES_PREFIX)LitScrip
+
 
 # @NOTE: basic compile command
 ifeq ($(strip $(INCLUDE)),)
@@ -71,12 +79,21 @@ else
 endif
 
 # @NOTE: misc commands
-BUILD_SUB_PACKAGES = $(TESTING_TARGET) $(BUILD_EXAMPLES_DIR)/abcLang $(BUILD_EXAMPLES_DIR)/arithmeticLang $(BUILD_EXAMPLES_DIR)/dateLang
+BUILD_SUB_PACKAGES = $(TESTING_TARGET) $(BUILD_EXAMPLES_DIR)/abcLang $(BUILD_EXAMPLES_DIR)/arithmeticLang $(BUILD_EXAMPLES_DIR)/dateLang $(BUILD_EXAMPLES_DIR)/LitScrip
 
-# @NOTE: output formatting
-COLOR_STR ?= **INVALID**
-COLOR_NUM ?= 196
-COLOR_TEXT = \033[38;5;$(COLOR_NUM)m$(COLOR_STR)\033[0m
+
+# @NOTE: TUI output formatting selections
+
+# @NOTE: ERROR output formatting
+ERROR_COLOR_STR = **INVALID**
+ERROR_COLOR_NUM = 196
+ERROR_OUT_RENDER = \033[38;5;$(ERROR_COLOR_NUM)m$(ERROR_COLOR_STR)\033[0m
+
+
+# @NOTE: title-line output formatting for 'help' rule (which is the default command, running when invoking with 'make', as opposed to 'make this_thing_or_that_thing', etc.)
+rHELP_COLOR_STR = 'cParse' - MAKEFILE COMMANDS
+rHELP_COLOR_NUM = 208
+rHELP_OUT_RENDER = \033[38;5;$(rHELP_COLOR_NUM)m$(rHELP_COLOR_STR)\033[0m
 
 
 
@@ -104,7 +121,7 @@ help:
 	@echo "\t"
 	@echo "\t --------------------------------------------  "
 	@echo "\t|                                             |"
-	@echo "\t ________'cParse' - MAKEFILE COMMANDS________  "
+	@echo "\t ________$(rHELP_OUT_RENDER)________  "
 	@echo "\t"
 	@echo "\t    • all ---------------> creates all package builds including all lib, testing, and example binaries/executables (and supporting file hierarchy)"
 	@echo "\t    • lib ---------------> creates all lib related binaries/executables (and supporting file hierarchy) **ONLY**"
@@ -113,6 +130,7 @@ help:
 	@echo "\t    • abcLang -----------> creates 'abcLang' example binaries/executable (and supporting file hierarchy) **ONLY**"
 	@echo "\t    • arithmeticLang ----> creates 'arithmeticLang' example binaries/executable (and supporting file hierarchy) **ONLY**"
 	@echo "\t    • dateLang ----------> creates 'dateLang' example binaries/executable (and supporting file hierarchy) **ONLY**"
+	@echo "\t    • LitScrip ----------> creates 'LitScrip' example binaries/executable (and supporting file hierarchy) **ONLY**"
 	@echo "\t    • reset -------------> reverts package back to pre-build state, removing all binaries/executables (and supporting file hierarchy)"
 	@echo "\t    • docs --------------> create documentation for lib (and package as a whole)"
 	@echo "\t"
@@ -173,49 +191,59 @@ dateLang: $(EXAMPLES_dateLang_SOURCE_FILES) $(EXAMPLES_dateLang_HEADER_FILES) | 
 	@echo "...**COMPLETE**"
 	@echo ""
 
+LitScrip: $(EXAMPLES_LitScrip_SOURCE_FILES) $(EXAMPLES_LitScrip_HEADER_FILES) | __create_build_examples_dir
+	@mkdir -p $(BUILD_EXAMPLES_DIR)/LitScrip
+	@echo ""
+	@echo "Building 'LitScrip' executable..."
+	@echo ""
+	@$(COMPILE) $(EXAMPLES_LitScrip_TARGET) $(EXAMPLES_LitScrip_SOURCE_FILES) $(EXAMPLES_LitScrip_HEADER_FILES)
+	@echo ""
+	@echo "...**COMPLETE**"
+	@echo ""
+
 
 reset:
 	@echo "";
-	@if [ "$(R_ID)" = "all" ]; then \
+	@if [ "$(ID)" = "all" ]; then \
 		echo "Resetting all builds contained in 'build' dir..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR); \
 		rm -r -f $(BUILD_TESTING_DIR); \
-		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(ID)'..."; \
 		echo ""; \
-	elif [ "$(R_ID)" = "examples" ]; then \
+	elif [ "$(ID)" = "examples" ]; then \
 		echo "Resetting 'build/examples' to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR); \
-		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(ID)'..."; \
 		echo ""; \
-	elif [ "$(R_ID)" = "tests" ]; then \
+	elif [ "$(ID)" = "tests" ]; then \
 		echo "Resetting 'tests' packaging to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_TESTING_DIR); \
-		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(ID)'..."; \
 		echo ""; \
-	elif [ "$(R_ID)" = "abcLang" ]; then \
+	elif [ "$(ID)" = "abcLang" ]; then \
 		echo "Resetting 'abcLang' example to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR)/abcLang; \
-		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(ID)'..."; \
 		echo ""; \
-	elif [ "$(R_ID)" = "arithmeticLang" ]; then \
+	elif [ "$(ID)" = "arithmeticLang" ]; then \
 		echo "Resetting 'arithmeticLang' example to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR)/arithmeticLang; \
-		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(ID)'..."; \
 		echo ""; \
-	elif [ "$(R_ID)" = "dateLang" ]; then \
+	elif [ "$(ID)" = "dateLang" ]; then \
 		echo "Resetting 'dateLang' example to pre-build state..."; \
 		echo ""; \
 		rm -r -f $(BUILD_EXAMPLES_DIR)/dateLang; \
-		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(R_ID)'..."; \
+		echo "'$(LIB_NAME)' package has been reset to it's state prior to building with rule '$(ID)'..."; \
 		echo ""; \
 	else \
 		echo ""; \
-		echo "\t$(COLOR_TEXT) - INPUT $(R_ID)' FOR 'R_ID' flag-variable must be ONE of the following selections\n"; \
+		echo "\t$(ERROR_OUT_RENDER) - INPUT $(ID)' FOR 'ID' flag-variable must be ONE of the following selections\n"; \
 		echo "\t\t• all"; \
 		echo "\t\t• abcLang"; \
 		echo "\t\t• arithmeticLang"; \

@@ -14,8 +14,6 @@ int main(int argc, char* argv[]) {
 	for (int i = 1; i < argc; i++) {
 		if (argc >= 1) {
 			PRINT(FORMAT_STRING(" \t\t%s\n", argv[i]));
-			// i = argc;
-			// break;
 		}
 	}
 	PRINT("\n");

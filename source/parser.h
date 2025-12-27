@@ -7,42 +7,6 @@
 #include "tensor.h"
 
 
-typedef void (*emit)(void* action_id, void* args);
-
-
-// typedef struct {
-
-// } Cursor;
-
-
-typedef struct {
-	void* node_id;
-} Node;
-
-
-typedef struct {
-	size_t capacity;
-	size_t count;
-	Node* nodes;
-} NodeArray;
-
-
-typedef struct {
-	void* graph_id;
-	NodeArray nodes;	
-} Graph;
-
-
-// typedef struct {
-// 	void* input
-// } cParserInput;
-
-
-// typedef struct {
-// 	void* data;
-// } cParserOutput;
-
-
 typedef struct {
 	void* parser_id;
 } cParser;
@@ -54,8 +18,9 @@ void __init_cParser__(cParser* self, void* parser_id);
 void __free_cParser__(cParser* self);
 
 
-// @NOTE: parser actions
-void* parse(Token token);
+// @NOTE: parser calls/actions/execution units/etc.
+void* parse(cParser* self, Token token);
+typedef void (*emit)(void* action_id, void* args);
 
 
 #endif
