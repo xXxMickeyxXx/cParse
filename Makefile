@@ -30,8 +30,9 @@ BUILD_DIR = build
 EXAMPLES_DIR = examples
 INCLUDE_DIR = include
 SOURCE_DIR = source
-UTILS_DIR = "utils"
+UTILS_DIR = utils
 TESTING_DIR = testing
+# FILES_DIR = files
 
 
 # @NOTE: build dirs for the files and dirs that are generated when building from source
@@ -49,6 +50,10 @@ LIB_TARGET = $(LIB_NAME)
 TESTING_SOURCE_FILES = $(TESTING_DIR)/main.c $(LIB_SOURCE_FILES)
 TESTING_HEADER_FILES = $(TESTING_DIR)/testing_utils.h $(TESTING_DIR)/testing_SIMD_matmul.h
 TESTING_TARGET = $(BUILD_TESTING_DIR)/testing_$(LIB_NAME)
+
+
+# @NOTE: prototyping helper-application (using python) 
+# PROTOTYPES_DIR = $(FILES_DIR)/prototypes
 
 
 # @NOTE: files and dirs related to the package's examples

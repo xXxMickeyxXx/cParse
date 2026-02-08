@@ -7,7 +7,10 @@
 ##################################
 # • ---------- DIRS ---------- • #
 ##################################
-files
+files/info
+files/prototypes
+files/graphs
+files/sublime_project_files
 info
 build/*
 
